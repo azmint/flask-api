@@ -1,0 +1,10 @@
+version: '2'
+services:
+  app:
+    container_name: flask-api
+    build: .
+    ports:
+      - "8080:80"
+#    volumes:
+#      - ./:/opt/www
+#      - ./src:/opt/www/src
