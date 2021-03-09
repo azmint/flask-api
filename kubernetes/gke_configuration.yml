@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "flask-api"
+  namespace: "default"
+  labels:
+    app: "flask-api"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "flask-api"
+  template:
+    metadata:
+      labels:
+        app: "flask-api"
+    spec:
+      containers:
+        - name: "flask-api-1"
+          image: "gcr.io/solar-cab-262515/github.com/azmint/flask-api:$SHORT_SHA"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "flask-api-hpa-dayy"
+  namespace: "default"
+  labels:
+    app: "flask-api"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "flask-api"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 80
